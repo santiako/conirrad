@@ -1,0 +1,127 @@
+// Fuentes
+$fuente1: Tahoma, Geneva, sans-serif;
+
+// Colores
+$gris-oscuro: #4d4d4d;
+$verde-coni: #12AC5C;
+
+h1 {
+    font-size: 1.85em;
+    padding: 20px 0 20px 0;
+}
+
+h2 {
+    font-size: 1.4em;
+}
+
+h3 {
+    font-size: 1em;
+}
+
+%input-values {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid $verde-coni;
+    margin-bottom: 15px;
+    box-sizing:border-box;
+    font-size: .8em;
+}
+
+%submit-values {
+    background-color: $verde-coni;
+    border: 0;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.register-form {
+    width: 300px;
+    margin: 0 auto;
+    font-family: $fuente1;
+    h1 {
+        text-align: center;
+        color: $verde-coni;
+    }
+
+    input[type="password"],
+    input[type="email"],
+    input[type="text"] {
+        @extend %input-values;
+    }
+    input[type="submit"],
+    .buttonvolv {
+        @extend %input-values;
+        @extend %submit-values;
+    }
+}
+
+
+.login-form {
+    width: 300px;
+    margin: 0 auto;
+    font-family: $fuente1;
+    h1 {
+        text-align: center;
+        color: $verde-coni;
+    }
+
+    input[type="password"],
+    input[type="email"],
+    input[type="text"] {
+        @extend %input-values;
+    }
+
+    input[type="submit"],
+    .reglink {
+        @extend %input-values;
+        @extend %submit-values;
+    }
+}
+
+
+.home-users {
+    width: 600px;
+    margin: 0 auto;
+    font-family: $fuente1;
+
+    %hx {
+        text-align: left;
+        color: $verde-coni;
+    }
+    ul {
+        li {
+            a {
+                text-decoration: none;
+                color: black;
+                &:hover {
+                    color: #dcdcdc;
+                }
+            }
+        }
+    }
+    h1 {
+        @extend %hx;
+        padding: 0;
+    }
+    h2 {
+        @extend %hx;
+        //padding: 20px 0 20px 0;
+    }
+    h3 {
+        @extend %hx;
+        //padding: 20px 0 20px 0;
+    }
+    hr {
+        margin: -.6em 0 0 0;
+    }
+    .cnavolver {
+        margin-top: 5em;
+    }
+    .avolver {
+        @extend %input-values;
+        @extend %submit-values;
+        padding: 15px 50px;
+        text-decoration: none;
+    }
+}
