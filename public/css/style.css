@@ -1,0 +1,70 @@
+h1 {
+  font-size: 1.85em;
+  padding: 20px 0 20px 0; }
+
+h2 {
+  font-size: 1.4em; }
+
+h3 {
+  font-size: 1em; }
+
+.register-form input[type="password"],
+.register-form input[type="email"],
+.register-form input[type="text"], .register-form input[type="submit"],
+.register-form .buttonvolv, .login-form input[type="password"],
+.login-form input[type="email"],
+.login-form input[type="text"], .login-form input[type="submit"],
+.login-form .reglink, .home-users .avolver {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #12AC5C;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  font-size: .8em; }
+
+.register-form input[type="submit"],
+.register-form .buttonvolv, .login-form input[type="submit"],
+.login-form .reglink, .home-users .avolver {
+  background-color: #12AC5C;
+  border: 0;
+  cursor: pointer;
+  font-weight: bold;
+  color: #ffffff; }
+
+.register-form {
+  width: 300px;
+  margin: 0 auto;
+  font-family: Tahoma, Geneva, sans-serif; }
+  .register-form h1 {
+    text-align: center;
+    color: #12AC5C; }
+
+.login-form {
+  width: 300px;
+  margin: 0 auto;
+  font-family: Tahoma, Geneva, sans-serif; }
+  .login-form h1 {
+    text-align: center;
+    color: #12AC5C; }
+
+.home-users {
+  width: 600px;
+  margin: 0 auto;
+  font-family: Tahoma, Geneva, sans-serif; }
+  .home-users h1, .home-users h2, .home-users h3 {
+    text-align: left;
+    color: #12AC5C; }
+  .home-users ul li a {
+    text-decoration: none;
+    color: black; }
+    .home-users ul li a:hover {
+      color: #dcdcdc; }
+  .home-users h1 {
+    padding: 0; }
+  .home-users hr {
+    margin: -.6em 0 0 0; }
+  .home-users .cnavolver {
+    margin-top: 5em; }
+  .home-users .avolver {
+    padding: 15px 50px;
+    text-decoration: none; }
