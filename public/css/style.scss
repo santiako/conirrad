@@ -35,6 +35,33 @@ h3 {
     color: #ffffff;
 }
 
+.login-form {
+    width: 300px;
+    margin: 0 auto;
+    font-family: $fuente1;
+    h1 {
+        text-align: center;
+        color: $verde-coni;
+    }
+
+    input[type="password"],
+    input[type="email"],
+    input[type="text"] {
+        @extend %input-values;
+    }
+
+    input[type="email"]:focus:required:invalid {
+        border: 1px solid red;
+    }
+
+    input[type="submit"],
+    .reglink {
+        @extend %input-values;
+        @extend %submit-values;
+    }
+
+}
+
 .register-form {
     width: 300px;
     margin: 0 auto;
@@ -51,29 +78,6 @@ h3 {
     }
     input[type="submit"],
     .buttonvolv {
-        @extend %input-values;
-        @extend %submit-values;
-    }
-}
-
-
-.login-form {
-    width: 300px;
-    margin: 0 auto;
-    font-family: $fuente1;
-    h1 {
-        text-align: center;
-        color: $verde-coni;
-    }
-
-    input[type="password"],
-    input[type="email"],
-    input[type="text"] {
-        @extend %input-values;
-    }
-
-    input[type="submit"],
-    .reglink {
         @extend %input-values;
         @extend %submit-values;
     }
