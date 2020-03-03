@@ -74,7 +74,7 @@ app.post('/login', function(request, response) {
                         return response.status(400).send('Contraseña incorrecta!');
                     }
                 } else {
-                    // Mostrar mensaje en pantalla diciendo que no existe el usuario
+                    // Mostrar mensaje en pantalla diciendo que no existe el usuario...
                     request.session.loggedin = false;
                     request.session.userid = null;
                     request.session.username = '';
