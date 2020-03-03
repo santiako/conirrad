@@ -2,7 +2,7 @@ var pg = require('pg');
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-//var morgan = require('morgan');
+var morgan = require('morgan');
 var path = require('path');
 
 const PORT = 3000;
@@ -29,13 +29,13 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 
-//app.use(function(request, response, next) {
-//  response.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-//  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//  next();
-//});
+app.use(function(request, response, next) {
+  response.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 
 app.get('/', function(request, response) {
@@ -47,15 +47,14 @@ app.get('/register', function(request, response) {
 });
 
 app.post('/login', function(request, response) {
-	var usermail = request.body.usermail;
-	var password = request.body.password;
+	var usermail = request.body.email_login;
+	var password = request.body.pass_login;
 
 	if (usermail && password) {
 		pool.query('SELECT * FROM usuario WHERE LOWER(mail)=LOWER($1)', [usermail], (err, table) => {
 			if (err) {
-                //response.send('Usuario o Contraseña incorrecta!');
                 console.log(err);
-                return response.status(400).send('Usuario inexistente! ' + err);
+                return response.status(400).send('Error: ' + err);
 			} else {
                 // Si existe el mail continua...
                 if (table.rows.length > 0) {
@@ -65,7 +64,9 @@ app.post('/login', function(request, response) {
                         request.session.loggedin = true;
                         request.session.userid = table.rows[0].id;
                         request.session.username = table.rows[0].nombre;
-                        response.redirect('/home');
+
+                        //response.status(200).send(table.rows[0]);
+                        //response.redirect('/home');
                         //return response.status(200).send(table.rows[0]);
                     } else {
                         request.session.loggedin = false;
@@ -82,6 +83,7 @@ app.post('/login', function(request, response) {
                     return response.status(400).send('Usuario inexistente!');
                 }
 			}
+            response.redirect('/home');
 			//response.end();
 		});
 	} else {
