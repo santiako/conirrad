@@ -101,7 +101,27 @@ let datos = {
                     })
                     .then(function(data) {
                         console.log('data = ', data);
-                        window.location = '/home';
+                        if (data.error == 0 || data.error == 1) {
+                            switch (data.error) {
+                                // Usuario inexistente, borrar textbox y hacer focus
+                                case 0:
+                                    $('input[name="usermail"]').val('');
+                                    $('input[name="usermail"]').focus();
+                                    alert(data.desc);
+                                break;
+
+                                // Constraseña erronea, borrar textbox y hacer focus
+                                case 1:
+                                    $('input[name="password"]').val('');
+                                    $('input[name="password"]').focus();
+                                    alert(data.desc);
+                                break;
+                                default:
+                                break;
+                            }
+                        } else {
+                            window.location = '/home';
+                        }
                     })
                     .catch(function(err) {
                         console.error(err);

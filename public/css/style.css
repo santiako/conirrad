@@ -11,6 +11,7 @@ h3 {
 .login-form input[type="password"],
 .login-form input[type="email"],
 .login-form input[type="text"], .login-form input[type="submit"],
+.login-form input[type="button"],
 .login-form .reglink, .register-form input[type="password"],
 .register-form input[type="email"],
 .register-form input[type="text"], .register-form input[type="submit"],
@@ -23,6 +24,7 @@ h3 {
   font-size: .8em; }
 
 .login-form input[type="submit"],
+.login-form input[type="button"],
 .login-form .reglink, .register-form input[type="submit"],
 .register-form .buttonvolv, .home-users .avolver {
   background-color: #12AC5C;
