@@ -65,15 +65,18 @@ app.post('/login', function(request, response) {
                         request.session.userid = table.rows[0].id;
                         request.session.username = table.rows[0].nombre;
 
-                        response.status(200).send(table.rows[0]);
                         //response.redirect('/home');
-                        //return response.status(200).send(table.rows[0]);
+                        response.status(200).send(table.rows[0]);
                     } else {
                         request.session.loggedin = false;
                         request.session.userid = null;
                         request.session.username = '';
 
-                        return response.status(400).send('Contraseña incorrecta!');
+                        let datoserr = {
+                            error: 1,
+                            desc: 'Contraseña incorrecta!'
+                        };
+                        return response.status(200).send(datoserr);
                     }
                 } else {
                     // Mostrar mensaje en pantalla diciendo que no existe el usuario...
@@ -81,7 +84,12 @@ app.post('/login', function(request, response) {
                     request.session.userid = null;
                     request.session.username = '';
                     console.log('Usuario inexistente!');
-                    return response.status(400).send('Usuario inexistente!');
+
+                    let datoserr = {
+                        error: 0,
+                        desc: 'Usuario inexistente!'
+                    };
+                    return response.status(200).send(datoserr);
                 }
 			}
 			//response.end();
