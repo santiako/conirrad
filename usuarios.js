@@ -2,7 +2,7 @@ var pg = require('pg');
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var morgan = require('morgan');
+//var morgan = require('morgan');
 var path = require('path');
 
 const PORT = 3000;
@@ -60,7 +60,7 @@ app.post('/login', function(request, response) {
                 if (table.rows.length > 0) {
                     // Existe el usuario, chequear si coincide la contraseña... (agregar bycrypt)
                     if (table.rows[0].contra == password) {
-                        console.log('Usuario logueado!');
+                        console.log('Usuario logueado.');
                         request.session.loggedin = true;
                         request.session.userid = table.rows[0].id;
                         request.session.username = table.rows[0].nombre;
@@ -74,7 +74,7 @@ app.post('/login', function(request, response) {
 
                         let datoserr = {
                             error: 1,
-                            desc: 'Contraseña incorrecta!'
+                            desc: 'Contraseña incorrecta.'
                         };
                         return response.status(200).send(datoserr);
                     }
@@ -83,11 +83,11 @@ app.post('/login', function(request, response) {
                     request.session.loggedin = false;
                     request.session.userid = null;
                     request.session.username = '';
-                    console.log('Usuario inexistente!');
+                    console.log('Usuario inexistente.');
 
                     let datoserr = {
                         error: 0,
-                        desc: 'Usuario inexistente!'
+                        desc: 'Usuario inexistente.'
                     };
                     return response.status(200).send(datoserr);
                 }
@@ -95,7 +95,7 @@ app.post('/login', function(request, response) {
 			//response.end();
 		});
 	} else {
-		response.send('Por favor ingresar Usuario y Contraseña');
+		response.send('Por favor ingresar Usuario y Contraseña.');
 		//response.end();
 	}
 });
@@ -110,8 +110,8 @@ app.post('/register', function(request, response) {
 
     //Validar datos antes de agregar... (mayus, minús, letras)
     if (password != confpass) {
-        console.log('Ingresar contraseñas iguales!');
-        return response.status(400).send('Contraseñas distintas!');
+        console.log('Ingresar contraseñas iguales.');
+        return response.status(400).send('Contraseñas distintas.');
     }
     let values = [usermail, password, userdni, username, usersurname];
 
@@ -124,14 +124,14 @@ app.post('/register', function(request, response) {
             [...values], (err, table) => {
 			if (err) {
                 console.log(err);
-                return response.status(400).send('Error! ' + err);
+                return response.status(400).send('Error: ' + err);
 			} else {
                 console.log('Datos agregados!');
-                return response.status(200).send('Datos agregados!');
+                return response.status(200).send('Datos agregados.');
 			}
 		});
 	} else {
-		response.send('Por favor completar todos los campos!');
+		response.send('Por favor completar todos los campos.');
 	}
 });
 
@@ -150,7 +150,7 @@ app.get('/home', function(request, response) {
         pool.query('SELECT * FROM informe WHERE idusuario = $1', [userid], (err, table) => {
             if (err) {
                 console.log(err);
-                return response.status(400).send('Error! ' + err);
+                return response.status(400).send('Error: ' + err);
             } else {
                 if (table.rows.length > 0) {
                     htmltxt += '<h2>INFORMES</h2>';
