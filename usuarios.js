@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
-app.use(morgan('dev'));
+//app.use(morgan('dev'));
 
 app.use(function(request, response, next) {
   response.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
@@ -65,13 +65,14 @@ app.post('/login', function(request, response) {
                         request.session.userid = table.rows[0].id;
                         request.session.username = table.rows[0].nombre;
 
-                        //response.status(200).send(table.rows[0]);
+                        response.status(200).send(table.rows[0]);
                         //response.redirect('/home');
                         //return response.status(200).send(table.rows[0]);
                     } else {
                         request.session.loggedin = false;
                         request.session.userid = null;
                         request.session.username = '';
+
                         return response.status(400).send('Contraseña incorrecta!');
                     }
                 } else {
@@ -83,7 +84,6 @@ app.post('/login', function(request, response) {
                     return response.status(400).send('Usuario inexistente!');
                 }
 			}
-            response.redirect('/home');
 			//response.end();
 		});
 	} else {
