@@ -55,6 +55,7 @@ h3 {
     }
 
     input[type="submit"],
+    input[type="button"],
     .reglink {
         @extend %input-values;
         @extend %submit-values;
