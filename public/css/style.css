@@ -42,6 +42,10 @@ h3 {
     color: #12AC5C; }
   .login-form input[type="email"]:focus:required:invalid {
     border: 1px solid red; }
+  .login-form input[type="submit"],
+  .login-form input[type="button"],
+  .login-form .reglink {
+    margin-top: 1.3em; }
 
 .register-form {
   width: 300px;
@@ -50,6 +54,8 @@ h3 {
   .register-form h1 {
     text-align: center;
     color: #12AC5C; }
+  .register-form input[type="submit"] {
+    margin-top: 1.3em; }
 
 .home-users {
   width: 600px;
