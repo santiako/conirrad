@@ -5,6 +5,10 @@
 <title>Formulario de registro</title>
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
 <link href="css/style.css" id="cssFile" rel="stylesheet" type="text/css">
 
 <style>
@@ -46,110 +50,115 @@
 }
 </style>
 </head>
-	<body>
-		<div class="register-form">
-			<h1>FORMULARIO DE REGISTRO</h1>
-			<form action="register" method="POST">
-				<input type="email" name="usermail" placeholder="Mail" required>
-				<input type="password" name="password" id="passwrd" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="Contraseña" required>
-                <input type="password" name="confpass" id="confpass" placeholder="Confirmar contraseña" required>
-                <input type="text" name="userdni" placeholder="Número de documento" required>
-                <input type="text" name="username" placeholder="Nombre" required>
-                <input type="text" name="usersurname" placeholder="Apellido" required>
-				<input type="submit" value="ENVIAR">
-                <input type="button" class="buttonvolv" name="buttonvolv" value="VOLVER">
-			</form>
-            <div id="mensaje-val">
-                <h2>La contraseña debe contener lo siguiente:</h2>
-                <p id="length" class="invalid">Mínimo <b>8 caracteres.</b></p>
-                <p id="capital" class="invalid">Una letra <b>mayúscula.</b></p>
-                <p id="letter" class="invalid">Una letra <b>minúscula.</b></p>
-                <p id="number" class="invalid">Un <b>número.</b></p>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg">
+            <div class="register-form">
+                <h1>FORMULARIO DE REGISTRO</h1>
+                <form action="register" method="POST">
+                    <input type="email" name="usermail" placeholder="Mail" required>
+                    <input type="password" name="password" id="passwrd" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" placeholder="Contraseña" required>
+                    <input type="password" name="confpass" id="confpass" placeholder="Confirmar contraseña" required>
+                    <input type="text" name="userdni" placeholder="Número de documento" required>
+                    <input type="text" name="username" placeholder="Nombre" required>
+                    <input type="text" name="usersurname" placeholder="Apellido" required>
+                    <input type="submit" value="ENVIAR">
+                    <input type="button" class="buttonvolv" name="buttonvolv" value="VOLVER">
+                </form>
+                <div id="mensaje-val">
+                    <h2>La contraseña debe contener lo siguiente:</h2>
+                    <p id="length" class="invalid">Mínimo <b>8 caracteres.</b></p>
+                    <p id="capital" class="invalid">Una letra <b>mayúscula.</b></p>
+                    <p id="letter" class="invalid">Una letra <b>minúscula.</b></p>
+                    <p id="number" class="invalid">Un <b>número.</b></p>
+                </div>
+                <div id="mensaje-val2">
+                    <h2>Confirmar contraseña:</h2>
+                    <p id="confpassp" class="invalid">Constraseñas <b>iguales.</b></p>
+                </div>
             </div>
-            <div id="mensaje-val2">
-                <h2>Confirmar contraseña:</h2>
-                <p id="confpassp" class="invalid">Constraseñas <b>iguales.</b></p>
-            </div>
-		</div>
+        </div>
+    </div>
+</div>
 
-
-    <script>
-    $(document).ready(function() {
-        $('.buttonvolv').click(function() {
-            window.location = '/';
-        });
-
-
-        // When the user clicks on the password field, show the message box
-        $('#passwrd').focus(function() {
-            $('#mensaje-val').css('display', 'block');
-        });
-        // When the user clicks outside of the password field, hide the message box
-        $('#passwrd').blur(function() {
-            $('#mensaje-val').css('display', 'none');
-        });
-        // When the user starts to type something inside the password field
-        $('#passwrd').keyup(function() {
-          // Validate capital letters
-          var upperCaseLetters = /[A-Z]/g;
-          var passwrd = $(this).val();
-          if(passwrd.match(upperCaseLetters)) {
-            $('#capital').removeClass("invalid");
-            $('#capital').addClass("valid");
-          } else {
-            $('#capital').removeClass("valid");
-            $('#capital').addClass("invalid");
-          }
-
-          // Validate lowercase letters
-          var lowerCaseLetters = /[a-z]/g;
-          if(passwrd.match(lowerCaseLetters)) {
-            $('#letter').removeClass("invalid");
-            $('#letter').addClass("valid");
-          } else {
-            $('#letter').removeClass("valid");
-            $('#letter').addClass("invalid");
-          }
-
-          // Validate numbers
-          var numbers = /[0-9]/g;
-          if(passwrd.match(numbers)) {
-            $('#number').removeClass("invalid");
-            $('#number').addClass("valid");
-          } else {
-            $('#number').removeClass("valid");
-            $('#number').addClass("invalid");
-          }
-
-          // Validate length
-          if(passwrd.length >= 8) {
-            $('#length').removeClass("invalid");
-            $('#length').addClass("valid");
-          } else {
-            $('#length').removeClass("valid");
-            $('#length').addClass("invalid");
-          }
-        });
-
-
-        $('#confpass').focus(function() {
-            $('#mensaje-val2').css('display', 'block');
-        });
-        $('#confpass').blur(function() {
-            $('#mensaje-val2').css('display', 'none');
-        });
-
-        $('#confpass').keyup(function() {
-            //Si los dos input box de contraseña son iguales lo tilda de verde
-          if ($(this).val == $('#passwrd').val) {
-            $('#confpassp').removeClass("invalid");
-            $('#confpassp').addClass("valid");
-          } else {
-            $('#confpassp').removeClass("valid");
-            $('#confpassp').addClass("invalid");
-          }
-        });
+<script>
+$(document).ready(function() {
+    $('.buttonvolv').click(function() {
+        window.location = '/';
     });
-    </script>
-	</body>
+
+
+    // When the user clicks on the password field, show the message box
+    $('#passwrd').focus(function() {
+        $('#mensaje-val').css('display', 'block');
+    });
+    // When the user clicks outside of the password field, hide the message box
+    $('#passwrd').blur(function() {
+        $('#mensaje-val').css('display', 'none');
+    });
+    // When the user starts to type something inside the password field
+    $('#passwrd').keyup(function() {
+      // Validate capital letters
+      var upperCaseLetters = /[A-Z]/g;
+      var passwrd = $(this).val();
+      if(passwrd.match(upperCaseLetters)) {
+        $('#capital').removeClass("invalid");
+        $('#capital').addClass("valid");
+      } else {
+        $('#capital').removeClass("valid");
+        $('#capital').addClass("invalid");
+      }
+
+      // Validate lowercase letters
+      var lowerCaseLetters = /[a-z]/g;
+      if(passwrd.match(lowerCaseLetters)) {
+        $('#letter').removeClass("invalid");
+        $('#letter').addClass("valid");
+      } else {
+        $('#letter').removeClass("valid");
+        $('#letter').addClass("invalid");
+      }
+
+      // Validate numbers
+      var numbers = /[0-9]/g;
+      if(passwrd.match(numbers)) {
+        $('#number').removeClass("invalid");
+        $('#number').addClass("valid");
+      } else {
+        $('#number').removeClass("valid");
+        $('#number').addClass("invalid");
+      }
+
+      // Validate length
+      if(passwrd.length >= 8) {
+        $('#length').removeClass("invalid");
+        $('#length').addClass("valid");
+      } else {
+        $('#length').removeClass("valid");
+        $('#length').addClass("invalid");
+      }
+    });
+
+
+    $('#confpass').focus(function() {
+        $('#mensaje-val2').css('display', 'block');
+    });
+    $('#confpass').blur(function() {
+        $('#mensaje-val2').css('display', 'none');
+    });
+
+    $('#confpass').keyup(function() {
+        //Si los dos input box de contraseña son iguales lo tilda de verde
+      if ($(this).val == $('#passwrd').val) {
+        $('#confpassp').removeClass("invalid");
+        $('#confpassp').addClass("valid");
+      } else {
+        $('#confpassp').removeClass("valid");
+        $('#confpassp').addClass("invalid");
+      }
+    });
+});
+</script>
+</body>
 </html>

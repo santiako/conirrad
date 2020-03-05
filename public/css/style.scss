@@ -1,5 +1,5 @@
 // Fuentes
-$fuente1: Tahoma, Geneva, sans-serif;
+$fuente1: Arial, sans-serif;
 
 // Colores
 $gris-oscuro: #4d4d4d;
@@ -12,6 +12,7 @@ $margtop-submit: 1.3em;
 h1 {
     font-size: 1.85em;
     padding: 20px 0 20px 0;
+    font-weight: bold;
 }
 
 h2 {
@@ -39,9 +40,15 @@ h3 {
     color: #ffffff;
 }
 
-.login-form {
-    width: 300px;
+.col-lg {
+    max-width: 20em;
+    min-width: 17em;
     margin: 0 auto;
+}
+
+.login-form {
+    //width: 300px;
+    //margin: 0 auto;
     font-family: $fuente1;
     h1 {
         text-align: center;
@@ -68,8 +75,8 @@ h3 {
 }
 
 .register-form {
-    width: 300px;
-    margin: 0 auto;
+//    width: 300px;
+//    margin: 0 auto;
     font-family: $fuente1;
     h1 {
         text-align: center;
@@ -93,8 +100,8 @@ h3 {
 
 
 .home-users {
-    width: 600px;
-    margin: 0 auto;
+//    width: 600px;
+//    margin: 0 auto;
     font-family: $fuente1;
 
     %hx {
