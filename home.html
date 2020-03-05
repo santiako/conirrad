@@ -9,19 +9,29 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <link href="css/style.css" id="cssFile" rel="stylesheet" type="text/css">
 </head>
 <body>
+<div id="app">
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg">
             <div class="home-users">
-                <h1 class="home-title">BIENVENIDO nombre</h1>
-                <h2 class="informes-title">INFORMES/NO HAY INFORMES.</h2>
-                <hr>
-                <ul>
-                    <li><a href="link.pdf">Informe dosimétrico</a></li>
-                </ul>
+                <h1 class="home-title">BIENVENIDO {{ nomUsuario }}</h1>
+                <div v-if="informes">
+                    <h2>INFORMES</h2>
+                    <hr>
+                    <ul>
+                        <li v-for="informe in listaDeInformes">
+                            <a v-bind:href="informe.link">{{ informe.texInforme }}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div v-else>
+                    <h2>NO HAY INFORMES.</h2>
+                </div>
+
                 <div class="cnavolver">
                     <a href="/" class="avolver">VOLVER</a>
                 </div>
@@ -29,17 +39,21 @@
         </div>
     </div>
 </div>
+</div>
 
-
-
-<!--
-    <script>
-    var request = new Request('/home', {
-        method: 'GET',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify(data)
-    });
-    </script>
--->
+<script>
+var app = new Vue({
+    el: '#app',
+    data: {
+        idUsuario: 0,
+        nomUsuario: 'Carlos',
+        informes: true,
+        listaDeInformes: [
+            { link: 'public/clientes/1/prueba.pdf', texInforme: 'Informe dosimétrico' },
+            { link: 'public/clientes/1/prueba2.pdf', texInforme: 'Informe dosimétrico 2' }
+        ]
+    }
+})
+</script>
 </body>
 </html>
