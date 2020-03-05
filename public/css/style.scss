@@ -5,6 +5,10 @@ $fuente1: Tahoma, Geneva, sans-serif;
 $gris-oscuro: #4d4d4d;
 $verde-coni: #12AC5C;
 
+// Margins, paddins, etc
+$margtop-submit: 1.3em;
+
+
 h1 {
     font-size: 1.85em;
     padding: 20px 0 20px 0;
@@ -55,11 +59,12 @@ h3 {
     }
 
     input[type="submit"],
+    input[type="button"],
     .reglink {
         @extend %input-values;
         @extend %submit-values;
+        margin-top: $margtop-submit;
     }
-
 }
 
 .register-form {
@@ -80,6 +85,9 @@ h3 {
     .buttonvolv {
         @extend %input-values;
         @extend %submit-values;
+    }
+    input[type="submit"] {
+        margin-top: $margtop-submit;
     }
 }
 

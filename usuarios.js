@@ -31,11 +31,11 @@ app.use(express.static(__dirname + '/public'));
 
 //app.use(morgan('dev'));
 
-//app.use(function(request, response, next) {
-//  response.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-//  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//  next();
-//});
+app.use(function(request, response, next) {
+  response.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 
 app.get('/', function(request, response) {
@@ -47,45 +47,55 @@ app.get('/register', function(request, response) {
 });
 
 app.post('/login', function(request, response) {
-	var usermail = request.body.usermail;
-	var password = request.body.password;
+	var usermail = request.body.email_login;
+	var password = request.body.pass_login;
 
 	if (usermail && password) {
 		pool.query('SELECT * FROM usuario WHERE LOWER(mail)=LOWER($1)', [usermail], (err, table) => {
 			if (err) {
-                //response.send('Usuario o Contraseña incorrecta!');
                 console.log(err);
-                return response.status(400).send('Usuario inexistente! ' + err);
+                return response.status(400).send('Error: ' + err);
 			} else {
                 // Si existe el mail continua...
                 if (table.rows.length > 0) {
                     // Existe el usuario, chequear si coincide la contraseña... (agregar bycrypt)
                     if (table.rows[0].contra == password) {
-                        console.log('Usuario logueado!');
+                        console.log('Usuario logueado.');
                         request.session.loggedin = true;
                         request.session.userid = table.rows[0].id;
                         request.session.username = table.rows[0].nombre;
-                        response.redirect('/home');
-                        //return response.status(200).send(table.rows[0]);
+
+                        //response.redirect('/home');
+                        response.status(200).send(table.rows[0]);
                     } else {
                         request.session.loggedin = false;
                         request.session.userid = null;
                         request.session.username = '';
-                        return response.status(400).send('Contraseña incorrecta!');
+
+                        let datoserr = {
+                            error: 1,
+                            desc: 'Contraseña incorrecta.'
+                        };
+                        return response.status(200).send(datoserr);
                     }
                 } else {
                     // Mostrar mensaje en pantalla diciendo que no existe el usuario...
                     request.session.loggedin = false;
                     request.session.userid = null;
                     request.session.username = '';
-                    console.log('Usuario inexistente!');
-                    return response.status(400).send('Usuario inexistente!');
+                    console.log('Usuario inexistente.');
+
+                    let datoserr = {
+                        error: 0,
+                        desc: 'Usuario inexistente.'
+                    };
+                    return response.status(200).send(datoserr);
                 }
 			}
 			//response.end();
 		});
 	} else {
-		response.send('Por favor ingresar Usuario y Contraseña');
+		response.send('Por favor ingresar Usuario y Contraseña.');
 		//response.end();
 	}
 });
@@ -100,8 +110,8 @@ app.post('/register', function(request, response) {
 
     //Validar datos antes de agregar... (mayus, minús, letras)
     if (password != confpass) {
-        console.log('Ingresar contraseñas iguales!');
-        return response.status(400).send('Contraseñas distintas!');
+        console.log('Ingresar contraseñas iguales.');
+        return response.status(400).send('Contraseñas distintas.');
     }
     let values = [usermail, password, userdni, username, usersurname];
 
@@ -114,14 +124,14 @@ app.post('/register', function(request, response) {
             [...values], (err, table) => {
 			if (err) {
                 console.log(err);
-                return response.status(400).send('Error! ' + err);
+                return response.status(400).send('Error: ' + err);
 			} else {
                 console.log('Datos agregados!');
-                return response.status(200).send('Datos agregados!');
+                return response.status(200).send('Datos agregados.');
 			}
 		});
 	} else {
-		response.send('Por favor completar todos los campos!');
+		response.send('Por favor completar todos los campos.');
 	}
 });
 
@@ -140,7 +150,7 @@ app.get('/home', function(request, response) {
         pool.query('SELECT * FROM informe WHERE idusuario = $1', [userid], (err, table) => {
             if (err) {
                 console.log(err);
-                return response.status(400).send('Error! ' + err);
+                return response.status(400).send('Error: ' + err);
             } else {
                 if (table.rows.length > 0) {
                     htmltxt += '<h2>INFORMES</h2>';

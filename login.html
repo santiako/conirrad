@@ -10,15 +10,66 @@
 	<body>
 		<div class="login-form">
 			<h1>INICIAR SESIÓN</h1>
-			<form action="login" method="POST">
+			<form>
 				<input type="email" name="usermail" placeholder="Mail" required>
 				<input type="password" name="password" placeholder="Contraseña" required>
-				<input type="submit" value="INGRESAR">
-                <input type="button" class="reglink" name="reglink" value="REGISTRARSE">
+				<input type="button" name="inglink" value="INGRESAR">
 			</form>
 		</div>
     <script>
+let datos = {
+    email_login: $('input[name="usermail"]').val(),
+    pass_login: $('input[name="password"]').val()
+};
+
     $(document).ready(function() {
+        $('input[name="inglink"]').click(function() {
+            //Enviar datos de login con función Request POST
+            datos.email_login = $('input[name="usermail"]').val();
+            datos.pass_login = $('input[name="password"]').val();
+
+            var request = new Request('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: new Headers({ 'Content-Type': 'application/json' }),
+                    body: JSON.stringify(datos)
+                });
+
+                //xmlhttprequest
+                //Si el usuario es erroneo o la contraseña es incorrecta muestra mensaje en pantalla
+                //Si no redirige a la pantalla home
+                fetch(request)
+                    .then(function(response) {
+                        console.log('response =', response);
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        console.log('data = ', data);
+                        if (data.error == 0 || data.error == 1) {
+                            switch (data.error) {
+                                // Usuario inexistente, borrar textbox y hacer focus
+                                case 0:
+                                    $('input[name="usermail"]').val('');
+                                    $('input[name="usermail"]').focus();
+                                    alert(data.desc);
+                                break;
+
+                                // Constraseña erronea, borrar textbox y hacer focus
+                                case 1:
+                                    $('input[name="password"]').val('');
+                                    $('input[name="password"]').focus();
+                                    alert(data.desc);
+                                break;
+                                default:
+                                break;
+                            }
+                        } else {
+                            window.location = '/home';
+                        }
+                    })
+                    .catch(function(err) {
+                        console.error(err);
+                    });
+        });
         $(".reglink").click(function() {
             window.location = '/register';
         });
