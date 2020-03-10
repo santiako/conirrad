@@ -43,41 +43,37 @@
 </div>
 
 <script>
-// Hacer funcion fetch que actualize los valores
 var app = new Vue({
     el: '#app',
-    data () {
-        return {
-            loading: true,
-            errored: false,
-            nomUsuario: 'Default',
-            informes: true,
-            listaDeInformes: [
-                { link: 'public/clientes/1/prueba.pdf', texInforme: 'Texto default 1' },
-                { link: 'public/clientes/1/prueba2.pdf', texInforme: 'Texto default 2' }
-            ]
-        }
+    data: {
+        loading: true,
+        errored: false,
+        nomUsuario: 'Default',
+        informes: true,
+        listaDeInformes: [
+            { link: 'public/clientes/1/prueba.pdf', texInforme: 'Texto default 1' }
+        ]
     },
-    mounted () {
-        console.log('Vue.js mounted');
-        axios
-            .get('http://localhost:3000/api/home')
+    created: function() {
+        var that = this;
+        console.log('Vue.js created');
+        axios.get('http://localhost:3000/api/home')
             .then(function (response) {
+                // Si el usuario es '' decir que inicie sesión
                 console.log(response.data);
-                this.nomUsuario = response.data.nomUsuario;
-                this.informes = response.data.informes;
-                this.listaDeInformes = response.data.listaDeInformes;
+                that.nomUsuario = response.data.nomUsuario;
+                that.informes = response.data.informes;
+                that.listaDeInformes = response.data.listaDeInformes;
             })
             .catch(function(err) {
                 console.log(err);
-                this.errored = true;
+                //that.errored = true;
             })
             .then(function() {
+                console.log('Data fetched.');
                 console.log(this.nomUsuario);
-                this.loading = false;
+                //that.loading = false;
             });
-
-          //.then(response => (this.data = response))
       }
 })
 </script>
