@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-lg">
             <div class="home-users">
-                <h1 class="home-title">BIENVENIDO {{ nomUsuario }}</h1>
+                <h1 class="home-title">{{ nomUsuario }}</h1>
                 <div v-if="informes">
                     <h2>INFORMES</h2>
                     <hr>
@@ -59,11 +59,16 @@ var app = new Vue({
         console.log('Vue.js created');
         axios.get('http://localhost:3000/api/home')
             .then(function (response) {
-                // Si el usuario es '' decir que inicie sesión
+                // Si el usuario es '' decir que inicie sesión "POR FAVOR INICIE SESIÓN"
                 console.log(response.data);
-                that.nomUsuario = response.data.nomUsuario;
-                that.informes = response.data.informes;
-                that.listaDeInformes = response.data.listaDeInformes;
+                if (response.data.nomUsuario == '') {
+                    that.nomUsuario = 'POR FAVOR INICIE SESIÓN';
+                    that.informes = false;
+                } else {
+                    that.nomUsuario = 'BIENVENIDO ' + response.data.nomUsuario;
+                    that.informes = response.data.informes;
+                    that.listaDeInformes = response.data.listaDeInformes;
+                }
             })
             .catch(function(err) {
                 console.log(err);
