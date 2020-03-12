@@ -46,8 +46,6 @@
 var app = new Vue({
     el: '#app',
     data: {
-        loading: true,
-        errored: false,
         nomUsuario: 'Default',
         informes: true,
         listaDeInformes: [
@@ -72,21 +70,13 @@ var app = new Vue({
             })
             .catch(function(err) {
                 console.log(err);
-                //that.errored = true;
             })
             .then(function() {
                 console.log('Data fetched.');
                 console.log(this.nomUsuario);
-                //that.loading = false;
             });
       }
 })
 </script>
 </body>
 </html>
-
-
-
-
-
-
