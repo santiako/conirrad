@@ -186,6 +186,7 @@ app.get('/api/home', function(request, response) {
         })
 
 	} else {
+        // Si el usuario es '' decir que inicie sesión
         datos.nomUsuario = '';
         return response.status(200).send(datos);
 	}
