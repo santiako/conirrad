@@ -136,15 +136,22 @@ app.post('/register', function(request, response) {
 });
 
 app.get('/home', function(request, response) {
-    let htmltxt = '<!DOCTYPE HTML><html><head><meta charset="UTF-8"><title>Home usuarios</title><link href="css/style.css" id="cssFile" rel="stylesheet" type="text/css"></head><body><div class="home-users">';
-    var x;
+//    let htmltxt = '<!DOCTYPE HTML><html><head><meta charset="UTF-8"><title>Home usuarios</title><link href="css/style.css" id="cssFile" rel="stylesheet" type="text/css"></head><body><div class="home-users">';
+    let datos = {
+        nomUsuario: '',
+        informes: false,
+        listaInformes: [
+            { link: 'clientes/1/prueba.pdf', texInforme: 'Informe dosimétrico' }
+        ]
+    };
 
 	if (request.session.loggedin) {
         var userid = request.session.userid;
         var username = request.session.username;
         var pathinforme = 'clientes/' + userid + '/';
 
-        htmltxt += '<h1>BIENVENIDO ' + username.toUpperCase() + '</h1>';
+        //htmltxt += '<h1>BIENVENIDO ' + username.toUpperCase() + '</h1>';
+        datos.nomUsuario = username.toUpperCase();
 
         //Chequear si el usuario tiene informes, si tiene los muestra, caso contrario dice no hay informes
         pool.query('SELECT * FROM informe WHERE idusuario = $1', [userid], (err, table) => {
@@ -153,30 +160,37 @@ app.get('/home', function(request, response) {
                 return response.status(400).send('Error: ' + err);
             } else {
                 if (table.rows.length > 0) {
-                    htmltxt += '<h2>INFORMES</h2>';
-                    htmltxt += '<hr>';
-                    htmltxt += '<ul>';
-                    for (x = 0; x < table.rows.length; x++) {
-                        htmltxt += '<li><a href="' + pathinforme + table.rows[x].lnkinforme + '">' + table.rows[x].nominforme + '</a></li>';
+                    // Hay informes, enviarlos en formato Json
+                    datos.informes = true;
+//                    htmltxt += '<h2>INFORMES</h2>';
+//                    htmltxt += '<hr>';
+//                    htmltxt += '<ul>';
+                    for (var x = 0; x < table.rows.length; x++) {
+                        //htmltxt += '<li><a href="' + pathinforme + table.rows[x].lnkinforme + '">' + table.rows[x].nominforme + '</a></li>';
+                        datos.listaInformes[x].link = pathinforme + table.rows[x].lnkinforme;
+                        datos.listaInformes[x].texInforme = table.rows[x].nominforme;
                     }
-                    htmltxt += '</ul>';
+                    //htmltxt += '</ul>';
                 } else {
-                    //No hay informes
+                    //No hay informes.
+                    datos.informes = false;
                     console.log('No hay informes');
-                    htmltxt += '<h2>NO HAY INFORMES.</h2>';
-                    //response.status(200).send('No hay informes!')
+                    //htmltxt += '<h2>NO HAY INFORMES.</h2>';
+                    return response.status(200).send(datos);
                 }
             }
-            htmltxt += '<div class="cnavolver"><a href="/" class="avolver">VOLVER</a></div>';
-            htmltxt += '</div></body></html>';
-            return response.send(htmltxt);
+
+//            htmltxt += '<div class="cnavolver"><a href="/" class="avolver">VOLVER</a></div>';
+//            htmltxt += '</div></body></html>';
+            return response.status(200).send(datos);
         })
 
 	} else {
-        htmltxt += '<h2>POR FAVOR INICIE SESIÓN</h2>';
-        htmltxt += '<div class="cnavolver"><a href="/" class="avolver">VOLVER</a></div>';
-        htmltxt += '</div></body></html>';
-        return response.send(htmltxt);
+        datos.nomUsuario = '';
+//        htmltxt += '<h2>POR FAVOR INICIE SESIÓN</h2>';
+//        htmltxt += '<div class="cnavolver"><a href="/" class="avolver">VOLVER</a></div>';
+//        htmltxt += '</div></body></html>';
+        return response.status(200).send(datos);
 	}
 
     //response.sendFile(path.join(__dirname + '/home.html'));
