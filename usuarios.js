@@ -1,21 +1,26 @@
-var pg = require('pg');
+//var pg = require('pg');
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 //var morgan = require('morgan');
 var path = require('path');
+var MongoClient = require("mongodb").MongoClient;
+var ObjectId = require("mongodb").ObjectID;
 
 const PORT = 3000;
 
+const CONNECTION_URL = "mongodb+srv://santiakodb:605900@cluster0-pvica.mongodb.net/test?retryWrites=true&w=majority";
+const DATABASE_NAME = "conirradDB";
 
-var pool = new pg.Pool({
-    port: 5432,
-    host: 'localhost',
-    user: 'postgres',
-    password: 'santiako22',
-    database: 'conirraddb',
-    max: 10
-});
+
+//var pool = new pg.Pool({
+//    port: 5432,
+//    host: 'localhost',
+//    user: 'postgres',
+//    password: 'santiako22',
+//    database: 'conirraddb',
+//    max: 10
+//});
 
 var app = express();
 app.use(session({
@@ -28,6 +33,8 @@ app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
+
+var database, collection;
 
 //app.use(morgan('dev'));
 
@@ -54,6 +61,19 @@ app.post('/login', function(request, response) {
 	var password = request.body.pass_login;
 
 	if (usermail && password) {
+        collection.find({}).toArray((error, result) => {
+            if (error) {
+                return response.status(500).send('Error: ' + error);
+            }
+            // Si existe el mail continua...
+
+
+            //response.send(result);
+        });
+
+
+
+
 		pool.query('SELECT * FROM usuario WHERE LOWER(mail)=LOWER($1)', [usermail], (err, table) => {
 			if (err) {
                 console.log(err);
@@ -120,9 +140,16 @@ app.post('/register', function(request, response) {
 
 	if (usermail && password && confpass
         && userdni && username && usersurname) {
+
         // (Verificar primero que no exista un usuario con el mismo mail)
-//        pool.query('INSERT INTO usuario (mail, contra, dni, nombre, apellido, cantinformes) VALUES($1, $2, $3, $4, $5, $6) WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE mail=$1)',
-//            [...values], (err, table) => {
+        collection.insert(request.body, (error, result) => {
+            if(error) {
+                return response.status(500).send(error);
+            }
+            response.send(result.result);
+        });
+
+
 		pool.query('INSERT INTO usuario (mail, contra, dni, nombre, apellido) VALUES($1, $2, $3, $4, $5)',
             [...values], (err, table) => {
 			if (err) {
@@ -152,6 +179,17 @@ app.get('/api/home', function(request, response) {
         var pathinforme = 'clientes/' + userid + '/';
 
         datos.nomUsuario = username.toUpperCase();
+
+        //Chequear si el usuario tiene informes, si tiene los muestra, caso contrario dice no hay informes
+        collection.find({}).toArray((error, result) => {
+            if (error) {
+                return response.status(500).send('Error: ' + error);
+            }
+
+
+            //response.send(result);
+        });
+
 
         //Chequear si el usuario tiene informes, si tiene los muestra, caso contrario dice no hay informes
         pool.query('SELECT * FROM informe WHERE idusuario = $1', [userid], (err, table) => {
@@ -185,4 +223,14 @@ app.get('/api/home', function(request, response) {
 	}
 });
 
-app.listen(PORT, () => console.log('Listening on port: ' + PORT ));
+//app.listen(PORT, () => console.log('Listening on port: ' + PORT ));
+app.listen(PORT, () => {
+    MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
+        if(error) {
+            throw error;
+        }
+        database = client.db(DATABASE_NAME);
+        collection = database.collection("usuario");
+        console.log("Conectado a: " + DATABASE_NAME + "!");
+    });
+});
