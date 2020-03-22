@@ -143,11 +143,8 @@ app.get('/api/home', function(request, response) {
     let datos = {
         nomUsuario: '',
         informes: false,
-        listaDeInformes: [
-            { link: 'clientes/1/prueba.pdf', texInforme: 'Informe dosimétrico' }
-        ]
+        listaDeInformes: []
     };
-    var defaultObj = { link: '', texInforme: '' };
 
 	if (request.session.loggedin) {
         var userid = request.session.userid;
@@ -164,17 +161,11 @@ app.get('/api/home', function(request, response) {
             } else {
                 if (table.rows.length > 0) {
                     // Hay informes, enviarlos en formato Json
-                    console.log('table rows: ' + table.rows.length);
                     datos.informes = true;
 
-                    console.log('table 2 link: 'table.rows[2].lnkinforme);
-                    datos.listaDeInformes.length = table.rows.length;
-                    for (var x = 0; x < table.rows.length; x++) {
-                        // Llenar lista con valores default
-                        datos.listaDeInformes[x] = defaultObj;
-
-                        datos.listaDeInformes[x].link = pathinforme + table.rows[x].lnkinforme;
-                        datos.listaDeInformes[x].texInforme = table.rows[x].nominforme;
+                    for (var x = 0; x < table.rows.length ; x++) {
+                        var lastList = { link: pathinforme + table.rows[x].lnkinforme, texInforme: table.rows[x].nominforme };
+                        datos.listaDeInformes.push(lastList);
                     }
                 } else {
                     //No hay informes.
