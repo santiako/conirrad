@@ -1,6 +1,7 @@
 h1 {
   font-size: 1.85em;
-  padding: 20px 0 20px 0; }
+  padding: 20px 0 20px 0;
+  font-weight: bold; }
 
 h2 {
   font-size: 1.4em; }
@@ -33,10 +34,13 @@ h3 {
   font-weight: bold;
   color: #ffffff; }
 
+.col-lg {
+  max-width: 20em;
+  min-width: 17em;
+  margin: 0 auto; }
+
 .login-form {
-  width: 300px;
-  margin: 0 auto;
-  font-family: Tahoma, Geneva, sans-serif; }
+  font-family: Arial, sans-serif; }
   .login-form h1 {
     text-align: center;
     color: #12AC5C; }
@@ -48,9 +52,7 @@ h3 {
     margin-top: 1.3em; }
 
 .register-form {
-  width: 300px;
-  margin: 0 auto;
-  font-family: Tahoma, Geneva, sans-serif; }
+  font-family: Arial, sans-serif; }
   .register-form h1 {
     text-align: center;
     color: #12AC5C; }
@@ -58,9 +60,7 @@ h3 {
     margin-top: 1.3em; }
 
 .home-users {
-  width: 600px;
-  margin: 0 auto;
-  font-family: Tahoma, Geneva, sans-serif; }
+  font-family: Arial, sans-serif; }
   .home-users h1, .home-users h2, .home-users h3 {
     text-align: left;
     color: #12AC5C; }
