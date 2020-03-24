@@ -4,6 +4,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 //var morgan = require('morgan');
 var path = require('path');
+var assert = require('assert');
 var MongoClient = require("mongodb").MongoClient;
 var ObjectId = require("mongodb").ObjectID;
 
@@ -57,30 +58,32 @@ app.get('/home', function(request, response) {
 
 
 app.post('/login', function(request, response) {
-	var usermail = request.body.email_login;
+	var usermail = request.body.email_login.toLowerCase();
 	var password = request.body.pass_login;
 
 	if (usermail && password) {
-        collection.find({}).toArray((error, result) => {
-            if (error) {
-                return response.status(500).send('Error: ' + error);
-            }
+        MongoClient.connect(CONNECTION_URL, function(err, db) {
+
+            var collection = db.collection('conirradDB');
+
             // Si existe el mail continua...
+            collection.find({ mail: usermail }).toArray((error, result) => {
+                if (error) {
+                    // no existe el usuario
+                    // Mostrar mensaje en pantalla diciendo que no existe el usuario...
+                    request.session.loggedin = false;
+                    request.session.userid = null;
+                    request.session.username = '';
+                    console.log('Usuario inexistente.');
 
+                    let datoserr = {
+                        error: 0,
+                        desc: 'Usuario inexistente.'
+                    };
+                    return response.status(200).send(datoserr);
+                    //return response.status(200).send('Error: ' + error);
 
-            //response.send(result);
-        });
-
-
-
-
-		pool.query('SELECT * FROM usuario WHERE LOWER(mail)=LOWER($1)', [usermail], (err, table) => {
-			if (err) {
-                console.log(err);
-                return response.status(400).send('Error: ' + err);
-			} else {
-                // Si existe el mail continua...
-                if (table.rows.length > 0) {
+                } else {
                     // Existe el usuario, chequear si coincide la contraseña... (agregar bycrypt)
                     if (table.rows[0].contra == password) {
                         console.log('Usuario logueado.');
@@ -101,22 +104,56 @@ app.post('/login', function(request, response) {
                         };
                         return response.status(200).send(datoserr);
                     }
-                } else {
-                    // Mostrar mensaje en pantalla diciendo que no existe el usuario...
-                    request.session.loggedin = false;
-                    request.session.userid = null;
-                    request.session.username = '';
-                    console.log('Usuario inexistente.');
-
-                    let datoserr = {
-                        error: 0,
-                        desc: 'Usuario inexistente.'
-                    };
-                    return response.status(200).send(datoserr);
                 }
-			}
-			//response.end();
-		});
+            });
+        });
+
+
+
+
+
+//		pool.query('SELECT * FROM usuario WHERE LOWER(mail)=LOWER($1)', [usermail], (err, table) => {
+//			if (err) {
+//                console.log(err);
+//                return response.status(400).send('Error: ' + err);
+//			} else {
+//                 Si existe el mail continua...
+//                if (table.rows.length > 0) {
+//                     Existe el usuario, chequear si coincide la contraseña... (agregar bycrypt)
+//                    if (table.rows[0].contra == password) {
+//                        console.log('Usuario logueado.');
+//                        request.session.loggedin = true;
+//                        request.session.userid = table.rows[0].id;
+//                        request.session.username = table.rows[0].nombre;
+//
+//
+//                        response.status(200).send(table.rows[0]);
+//                    } else {
+//                        request.session.loggedin = false;
+//                        request.session.userid = null;
+//                        request.session.username = '';
+//
+//                        let datoserr = {
+//                            error: 1,
+//                            desc: 'Contraseña incorrecta.'
+//                        };
+//                        return response.status(200).send(datoserr);
+//                    }
+//                } else {
+//                     Mostrar mensaje en pantalla diciendo que no existe el usuario...
+//                    request.session.loggedin = false;
+//                    request.session.userid = null;
+//                    request.session.username = '';
+//                    console.log('Usuario inexistente.');
+//
+//                    let datoserr = {
+//                        error: 0,
+//                        desc: 'Usuario inexistente.'
+//                    };
+//                    return response.status(200).send(datoserr);
+//                }
+//			}
+//		});
 	} else {
 		response.send('Por favor ingresar Usuario y Contraseña.');
 		//response.end();
@@ -223,14 +260,14 @@ app.get('/api/home', function(request, response) {
 	}
 });
 
-//app.listen(PORT, () => console.log('Listening on port: ' + PORT ));
-app.listen(PORT, () => {
-    MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
-        if(error) {
-            throw error;
-        }
-        database = client.db(DATABASE_NAME);
-        collection = database.collection("usuario");
-        console.log("Conectado a: " + DATABASE_NAME + "!");
-    });
-});
+app.listen(PORT, () => console.log('Listening on port: ' + PORT ));
+//app.listen(PORT, () => {
+//    MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
+//        if(error) {
+//            throw error;
+//        }
+//        database = client.db(DATABASE_NAME);
+//        collection = database.collection("usuario");
+//        console.log("Conectado a: " + DATABASE_NAME + "!");
+//    });
+//});
