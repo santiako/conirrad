@@ -219,49 +219,66 @@ app.get('/api/home', function(request, response) {
         listaDeInformes: []
     };
 
+    // Si el usuario esta logueado...
 	if (request.session.loggedin) {
         var userid = request.session.userid;
+        var usermail = request.body.usermail;
         var username = request.session.username;
         var pathinforme = 'clientes/' + userid + '/';
 
         datos.nomUsuario = username.toUpperCase();
 
+
         //Chequear si el usuario tiene informes, si tiene los muestra, caso contrario dice no hay informes
-        collection.find({}).toArray((error, result) => {
+        collection.find({ mail: usermail }).toArray((error, result) => {
             if (error) {
-                return response.status(500).send('Error: ' + error);
+                //No hay informes.
+                datos.informes = false;
+                console.log('No hay informes');
+                console.log(datos);
+                return response.status(200).send(datos);
+
+                //return response.status(400).send('Error: ' + error);
             }
+                // Hay informes, enviarlos en formato Json
+                datos.informes = true;
 
+                for (var x = 0; x < table.rows.length ; x++) {
+                    var lastList = { link: pathinforme + table.rows[x].lnkinforme, texInforme: table.rows[x].nominforme };
+                    datos.listaDeInformes.push(lastList);
+                }
 
+                console.log(datos);
+                return response.status(200).send(datos);
             //response.send(result);
         });
 
 
-        //Chequear si el usuario tiene informes, si tiene los muestra, caso contrario dice no hay informes
-        pool.query('SELECT * FROM informe WHERE idusuario = $1', [userid], (err, table) => {
-            if (err) {
-                console.log(err);
-                return response.status(400).send('Error: ' + err);
-            } else {
-                if (table.rows.length > 0) {
-                    // Hay informes, enviarlos en formato Json
-                    datos.informes = true;
-
-                    for (var x = 0; x < table.rows.length ; x++) {
-                        var lastList = { link: pathinforme + table.rows[x].lnkinforme, texInforme: table.rows[x].nominforme };
-                        datos.listaDeInformes.push(lastList);
-                    }
-                } else {
-                    //No hay informes.
-                    datos.informes = false;
-                    console.log('No hay informes');
-                    console.log(datos);
-                    return response.status(200).send(datos);
-                }
-            }
-            console.log(datos);
-            return response.status(200).send(datos);
-        })
+//        Chequear si el usuario tiene informes, si tiene los muestra, caso contrario dice no hay informes
+//        pool.query('SELECT * FROM informe WHERE idusuario = $1', [userid], (err, table) => {
+//            if (err) {
+//                console.log(err);
+//                return response.status(400).send('Error: ' + err);
+//            } else {
+//                if (table.rows.length > 0) {
+//                     Hay informes, enviarlos en formato Json
+//                    datos.informes = true;
+//
+//                    for (var x = 0; x < table.rows.length ; x++) {
+//                        var lastList = { link: pathinforme + table.rows[x].lnkinforme, texInforme: table.rows[x].nominforme };
+//                        datos.listaDeInformes.push(lastList);
+//                    }
+//                } else {
+//                    No hay informes.
+//                    datos.informes = false;
+//                    console.log('No hay informes');
+//                    console.log(datos);
+//                    return response.status(200).send(datos);
+//                }
+//            }
+//            console.log(datos);
+//            return response.status(200).send(datos);
+//        })
 
 	} else {
         datos.nomUsuario = '';
