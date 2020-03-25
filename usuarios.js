@@ -35,7 +35,6 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/public'));
 
-var database, collection;
 
 //app.use(morgan('dev'));
 
@@ -173,30 +172,40 @@ app.post('/register', function(request, response) {
         console.log('Ingresar contraseñas iguales.');
         return response.status(400).send('Contraseñas distintas.');
     }
-    let values = [usermail, password, userdni, username, usersurname];
+    //let values = [usermail, password, userdni, username, usersurname];
 
 	if (usermail && password && confpass
         && userdni && username && usersurname) {
 
-        // (Verificar primero que no exista un usuario con el mismo mail)
-        collection.insert(request.body, (error, result) => {
-            if(error) {
-                return response.status(500).send(error);
-            }
-            response.send(result.result);
+        MongoClient.connect(CONNECTION_URL, function(err, db) {
+
+            var collection = db.collection('conirradDB');
+            // Setear ids incrementales
+            var insertobj = { id: 1, idinterno: 2, mail: usermail,
+                            contra: password, dni: userdni, nombre: username,
+                            apellido: usersurname };
+
+            // (Verificar primero que no exista un usuario con el mismo mail)
+            collection.insert(insertobj, (error, result) => {
+                if(error) {
+                    return response.status(500).send(error);
+                }
+
+                //response.send(result.result);
+                return response.status(200).send('Datos agregados.');
+            });
         });
 
-
-		pool.query('INSERT INTO usuario (mail, contra, dni, nombre, apellido) VALUES($1, $2, $3, $4, $5)',
-            [...values], (err, table) => {
-			if (err) {
-                console.log(err);
-                return response.status(400).send('Error: ' + err);
-			} else {
-                console.log('Datos agregados!');
-                return response.status(200).send('Datos agregados.');
-			}
-		});
+//            pool.query('INSERT INTO usuario (mail, contra, dni, nombre, apellido) VALUES($1, $2, $3, $4, $5)',
+//                [...values], (err, table) => {
+//                if (err) {
+//                    console.log(err);
+//                    return response.status(400).send('Error: ' + err);
+//                } else {
+//                    console.log('Datos agregados!');
+//                    return response.status(200).send('Datos agregados.');
+//                }
+//            });
 	} else {
 		response.send('Por favor completar todos los campos.');
 	}
