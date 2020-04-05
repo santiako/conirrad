@@ -2,16 +2,19 @@
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-//var morgan = require('morgan');
+var morgan = require('morgan');
 var path = require('path');
 var assert = require('assert');
-var MongoClient = require("mongodb").MongoClient;
-var ObjectId = require("mongodb").ObjectID;
+var mongoose = require('mongoose');
+//var MongoClient = require("mongodb").MongoClient;
+//var ObjectId = require("mongodb").ObjectID;
+
+const rutasUsuario = require('./rutas/rutasUsuario.js');
 
 const PORT = 3000;
 
 const CONNECTION_URL = "mongodb+srv://santiakodb:605900@cluster0-pvica.mongodb.net/test?retryWrites=true&w=majority";
-const DATABASE_NAME = "conirradDB";
+//const DATABASE_NAME = "conirradDB";
 
 
 //var pool = new pg.Pool({
@@ -24,6 +27,7 @@ const DATABASE_NAME = "conirradDB";
 //});
 
 var app = express();
+
 app.use(session({
 	secret: 'secret',
 	resave: true,
@@ -33,16 +37,21 @@ app.use(session({
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 
+mongoose.connect(CONNECTION_URL, { useNewUrlParser: true });
+
 app.use(express.static(__dirname + '/public'));
 
 
-//app.use(morgan('dev'));
+app.use(morgan('dev'));
 
 app.use(function(request, response, next) {
   response.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
   response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
+
+app.use(rutasUsuario);
+
 
 // Redirección a archivos HTML
 app.get('/', function(request, response) {
@@ -292,14 +301,4 @@ app.get('/api/home', function(request, response) {
 	}
 });
 
-app.listen(PORT, () => console.log('Listening on port: ' + PORT ));
-//app.listen(PORT, () => {
-//    MongoClient.connect(CONNECTION_URL, { useNewUrlParser: true }, (error, client) => {
-//        if(error) {
-//            throw error;
-//        }
-//        database = client.db(DATABASE_NAME);
-//        collection = database.collection("usuario");
-//        console.log("Conectado a: " + DATABASE_NAME + "!");
-//    });
-//});
+app.listen(PORT, () => { console.log('Listening on port: ' + PORT) });
