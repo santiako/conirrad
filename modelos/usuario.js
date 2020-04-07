@@ -1,19 +1,42 @@
 const mongoose = require('mongoose');
 
-const FoodSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  calories: {
-    type: Number,
-    default: 0,
-    validate(value) {
-      if (value < 0) throw new Error("Negative calories aren't real.");
-    }
-  },
+const SchemaUsuario = new mongoose.Schema({
+    id: {
+        type: Number,
+        default: 0
+    },
+	idinterno: {
+        type: Number,
+        default: 0
+    },
+	mail: {
+        type: String,
+        required: true,
+        trim: true
+    },
+	contra: {
+        type: String,
+        required: true,
+        trim: true
+    },
+	dni: {
+        type: Number,
+        required: true,
+        trim: true
+    },
+	nombre: {
+        type: String,
+        required: true,
+        trim: true
+    },
+	apellido: {
+        type: String,
+        required: true,
+        trim: true
+    },
+	informe: [ {  id: 1, nominforme: 'Informe dosimétrico', lnkinforme: 'informe.psd'  } ]
 });
 
-const Food = mongoose.model("Food", FoodSchema);
-module.exports = Food;
+const Usuario = mongoose.model("Usuario", SchemaUsuario);
+module.exports = Usuario;
+
