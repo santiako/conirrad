@@ -33,10 +33,9 @@ const SchemaUsuario = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    },
-	informe: [ {  id: 1, nominforme: 'Informe dosimétrico', lnkinforme: 'informe.psd'  } ]
-});
+    }
+	//informe: [ {  id: 1, nominforme: 'Informe dosimétrico', lnkinforme: 'informe.psd'  } ]
+}, { collection: 'usuario' });
 
-const Usuario = mongoose.model("Usuario", SchemaUsuario);
-module.exports = Usuario;
-
+const usuario = mongoose.model("usuario", SchemaUsuario);
+module.exports = usuario;

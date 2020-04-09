@@ -1,10 +1,11 @@
 const express = require('express');
-const modeloUsuario = require('../modelos/usuario');
+const session = require('express-session');
+const modeloUsuario = require('../modelos/usuario.js');
 const app = express();
 
 
 //app.get('/foods', async (req, res) => {
-//    const foods = await foodModel.find({});
+//    const foods = await modeloUsuario.find({});
 //
 //    try {
 //        console.log('Comidas solicitadas...')
@@ -15,22 +16,18 @@ const app = express();
 //});
 
 
-
 // Solicita loguearse y devuelve los datos de usuario
 app.post('/login', async (request, response) => {
 	var usermail = request.body.email_login.toLowerCase();
 	var password = request.body.pass_login;
 
 
-
 	if (usermail && password) {
         const usuarios = await modeloUsuario.find({ mail: usermail });
 
-
         // Si existe el mail continua...
-        //collection.find({ mail: usermail }).toArray((error, result) => {
         try {
-            if (error) {
+            if (usuarios.length < 1) {
                 // no existe el usuario
                 // Mostrar mensaje en pantalla diciendo que no existe el usuario...
                 request.session.loggedin = false;
@@ -44,7 +41,7 @@ app.post('/login', async (request, response) => {
                 };
 
                 console.log(datoserr);
-                return response.status(200).send(datoserr);
+                response.status(200).send(datoserr);
 
             } else {
                 // Existe el usuario, chequear si coincide la contraseña... (agregar bycrypt)
@@ -65,12 +62,16 @@ app.post('/login', async (request, response) => {
                         error: 1,
                         desc: 'Contraseña incorrecta.'
                     };
-                    //return response.status(200).send(datoserr);
-                    return response.send(datoserr);
+
+                    console.log(datoserr);
+                    response.status(200).send(datoserr);
                 }
             }
+
         } catch (err) {
-            response.status(500).send(err);
+            console.log('CatchErr: ' + err);
+            //response.status(500).send(err);
+            response.sendStatus(500);
         }
 
 
@@ -131,49 +132,49 @@ app.post('/login', async (request, response) => {
 
 // -----------------------------------------------------
 
-app.get('/foods', async (req, res) => {
-    const foods = await foodModel.find({});
-
-    try {
-        console.log('Comidas solicitadas...')
-        res.send(foods);
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
-
-app.post('/food', async (req, res) => {
-    const food = new foodModel(req.body);
-
-    try {
-        await food.save();
-        console.log('Comida agregada: ' + food.name);
-        res.send(food);
-    } catch (err) {
-        res.status(500).send(err);
-    }
-});
-
-app.delete('/food/:id', async (req, res) => {
-  try {
-    const food = await foodModel.findByIdAndDelete(req.params.id)
-
-    if (!food) res.status(404).send("No item found")
-    res.status(200).send()
-  } catch (err) {
-    res.status(500).send(err)
-  }
-})
-
-app.patch('/food/:id', async (req, res) => {
-  try {
-    await foodModel.findByIdAndUpdate(req.params.id, req.body)
-    await foodModel.save()
-    res.send(food)
-  } catch (err) {
-    res.status(500).send(err)
-  }
-})
+//app.get('/foods', async (req, res) => {
+//    const foods = await foodModel.find({});
+//
+//    try {
+//        console.log('Comidas solicitadas...')
+//        res.send(foods);
+//    } catch (err) {
+//        res.status(500).send(err);
+//    }
+//});
+//
+//app.post('/food', async (req, res) => {
+//    const food = new foodModel(req.body);
+//
+//    try {
+//        await food.save();
+//        console.log('Comida agregada: ' + food.name);
+//        res.send(food);
+//    } catch (err) {
+//        res.status(500).send(err);
+//    }
+//});
+//
+//app.delete('/food/:id', async (req, res) => {
+//  try {
+//    const food = await foodModel.findByIdAndDelete(req.params.id)
+//
+//    if (!food) res.status(404).send("No item found")
+//    res.status(200).send()
+//  } catch (err) {
+//    res.status(500).send(err)
+//  }
+//})
+//
+//app.patch('/food/:id', async (req, res) => {
+//  try {
+//    await foodModel.findByIdAndUpdate(req.params.id, req.body)
+//    await foodModel.save()
+//    res.send(food)
+//  } catch (err) {
+//    res.status(500).send(err)
+//  }
+//})
 
 
 module.exports = app
